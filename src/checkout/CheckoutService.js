@@ -16,7 +16,10 @@ export class CheckoutService {
       inventoryReserved = true;
       order = this.orderService.markInventoryReserved(order.id);
 
-      const payment = await this.paymentService.chargeOrder(order.id, command.paymentToken);
+      const payment = await this.paymentService.chargeOrder(
+        { orderId: order.id, amountCents: order.totalCents, currency: order.currency },
+        command.paymentToken
+      );
       order = this.orderService.markPaid(order.id, payment.id);
       order = this.orderService.complete(order.id);
 
